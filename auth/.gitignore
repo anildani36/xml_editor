@@ -1,5 +1,32 @@
+
+
+# Byte-compiled / optimized / compiled files
+__pycache__/
+*.pyc
+*.pyd
+*.pyo
+
+# Virtual environment
+venv/
 .venv/
+env/
 
+# Dependency management
+Pipfile.lock # Often included, but can be ignored if desired
+poetry.lock # Often included, but can be ignored if desired
+pip-log.log
+
+# IDE-specific files
+.idea/
+.vscode/
+*.iml
+
+# Logs and temporary files
+*.log
+*.tmp
+*~
+
+# Data files or sensitive info
+data/
+.env
 .env*
-
-*.pem

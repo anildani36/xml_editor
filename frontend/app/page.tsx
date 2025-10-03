@@ -10,7 +10,7 @@ const font = Poppins({
 })
 export default function Home() {
   return (
-    <main className="bg-radial from-sky-400 to-blue-800 flex h-screen flex-col items-center justify-center">
+    <main className="bg-radial from-sky-400 to-blue-800 flex min-h-screen flex-col items-center justify-center">
       <div className="space-y-6 text-center bg">
         <h1 className={cn("text-6xl front-semibold text-white drop-shadow-md", font.className)}>
         🔐 Auth
@@ -20,7 +20,11 @@ export default function Home() {
         </p>
         <div>
           <LoginButton>
-            <Button variant="secondary" size="lg">
+            <Button 
+              className="cursor-pointer"
+              variant="secondary" 
+              size="lg"
+            >
               Sign in
             </Button>
           </LoginButton>

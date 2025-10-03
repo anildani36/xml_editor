@@ -10,15 +10,21 @@ from starlette.middleware.cors import CORSMiddleware
 
 from src.config.app_config import get_configs
 from src.config.db_connection_config import get_db
+from src.exceptions.NoRefreshTokenFoundException import NoRefreshTokenFoundException
 from src.exceptions.NoUserFoundException import NoUserFoundException
+from src.exceptions.TokenDecodeException import TokenDecodeException
+from src.exceptions.TokenGenerationException import TokenGenerationException
 from src.exceptions.exception_handlers import (
     sqlalchemy_exception_handler,
     validation_exception_handler,
     http_exception_handler,
-    no_user_found_exception_handler
+    no_user_found_exception_handler,
+    no_refresh_token_found_exception_handler,
+    token_generation_exception_handler,
+    token_decode_exception_handler
 )
 from src.injection.container import Application
-from src.routes.authentication_routes import auth_router
+from src.routes.auth_routes import auth_router
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +38,24 @@ async def lifespan(_: FastAPI):
     yield
     # Application Shutdown
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    lifespan=lifespan,
+    title="Simple Auth Service API",
+    description="""
+    This is a authentication microservice. 
+    On successful login, access token and refresh token are generated for user, access token being short lived (15 min) anf refresh token long lived (7 days). 
+    Users can use refresh token to generate new access token. The refresh token will be saved in DB as server-side session and deleted using db trigger after expiration time.
+    """,
+    version="1.0.0",
+    contact={
+        "name": "API Support",
+        "contact_email": "anildani36@gmail.com",
+    },
+    license_info={
+        "name": "MIT License",
+        "url": "https://opensource.org/licenses/MIT",
+    },
+)
 
 security = HTTPBearer()
 
@@ -51,6 +74,9 @@ app.add_exception_handler(SQLAlchemyError, sqlalchemy_exception_handler)
 app.add_exception_handler(ValueError, validation_exception_handler)
 app.add_exception_handler(StarletteHTTPException, http_exception_handler)
 app.add_exception_handler(NoUserFoundException, no_user_found_exception_handler)
+app.add_exception_handler(NoRefreshTokenFoundException, no_refresh_token_found_exception_handler)
+app.add_exception_handler(TokenGenerationException, token_generation_exception_handler)
+app.add_exception_handler(TokenDecodeException, token_decode_exception_handler)
 
 
 # Include all routers

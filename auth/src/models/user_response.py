@@ -11,7 +11,7 @@ class UserRoleBase(BaseModel):
 class UserInfo(BaseModel):
     username: str
     firstName: str = Field(alias="first_name")
-    last_name: str
+    lastName: str = Field(alias="last_name")
     email_id: str
     user_role: UserRoleBase = Field(alias="user_roles")
     last_updated_ts: datetime

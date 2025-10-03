@@ -14,20 +14,23 @@ import {
 } from "@/components/ui/form";
 import { CardWrapper } from "..//card/card-wrapper";
 import { FormError } from "../error/form-error";
-import { LoginSchema } from "@/schemas";
+import { LoginSchema } from "@/schemas/form_schemas";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { FormSuccess } from "../error/form-success";
 import { handleLogin } from "@/routes/auth";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export const LoginForm = () => {
+    const router = useRouter();
+
     const [error, setError] = useState<string | undefined>("");
     const [success, setSuccess] = useState<string | undefined>("");
     const form = useForm<z.infer<typeof LoginSchema>>({
         resolver: zodResolver(LoginSchema),
         defaultValues: {
-            email: "",
+            username: "",
             password: ""
         },
     })
@@ -37,11 +40,13 @@ export const LoginForm = () => {
         setError("");
         try{
             const response = await handleLogin(values);
-            setSuccess(response.data);
+            setSuccess(response.message);
+            router.push("/editor/neptune-editor")
         } catch (err: any) {
             setError(err.message);
         }
     }
+
     return (
         <CardWrapper
             headerTitle="🔐 Login"
@@ -57,15 +62,15 @@ export const LoginForm = () => {
                     <div className="space-y-4">
                         <FormField 
                             control={form.control}
-                            name="email"
+                            name="username"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Email</FormLabel>
+                                    <FormLabel>Username</FormLabel>
                                     <FormControl>
                                         <Input 
                                             {...field}
-                                            placeholder="john.doe@example.com"
-                                            type="email"
+                                            placeholder="doejohn"
+                                            type=""
                                             />
                                     </FormControl>
                                     <FormMessage />
@@ -95,7 +100,7 @@ export const LoginForm = () => {
 
                     <Button
                         type="submit"
-                        className="w-full"
+                        className="w-full cursor-pointer"
                     >
                         Login
                     </Button>

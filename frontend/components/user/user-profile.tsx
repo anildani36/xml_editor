@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form";
 import { CardWrapper } from "../card/card-wrapper";
 import { FormError } from "../error/form-error";
-import { UserProfileSchema } from "@/schemas";
+import { UserProfileSchema } from "@/schemas/form_schemas";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { FormSuccess } from "../error/form-success";

@@ -1,0 +1,73 @@
+version: '3.9'
+
+services:
+  auth_db:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    container_name: auth_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: auth_admin
+      POSTGRES_PASSWORD: 1£Y\s4Lg7uKc
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+
+#  backend:
+#    build:
+#      context: ./backend
+#      dockerfile: Dockerfile
+#    container_name: backend_app
+#    restart: unless-stopped
+#    depends_on:
+#      - db
+#      - auth
+#    environment:
+#      DATABASE_URL: postgres://user:password@db:5432/app_db
+#      AUTH_SERVICE_URL: http://auth:8001
+#    ports:
+#      - "8000:8000"
+#    networks:
+#      - app_network
+#
+  auth:
+    build:
+      context: ./auth
+      dockerfile: Dockerfile
+    container_name: auth_service
+    restart: unless-stopped
+    depends_on:
+      - auth_db
+    environment:
+      DATABASE_URL: postgresql://user:password@auth_db:5432/auth_db
+      ENV_NAME: "dev"
+      PRIVATE_KEY: "MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDL8Rd4UZaDXArhJHtk6xqZZ1N6BHxsm3GTsD3RPCCEvjhAx2Qqr9b9pqzAeO2p42kxFItvuG0EbE7mAiwTjpzdZ3ymkiQj/USpXmfZXVCFjhVe6Cecat2wTgMseaCr3zCeK7s5WIUWaI4f8jYDNh9WJcBKNSlysPsCxjVClisbKVRRMlUhYUJdeA/WCJdXEUFkrDGxaaTpmVpI/vyb0XTd07XxWFbV2SYLNfjVShfGlJ/pimX+BoGa2zlEsRr8+qJUuzNv4pP/Wr0rr10hHWqYiZsHqzhbUTeB0kje6rjbGIBvN97aEf19CMzV+9nAokGVnbtqTfgz2dt6Ta6rWSE9AgMBAAECggEAAyVl+kov6zjZRh3c9XKXB3TLmd9F2BsRxnh6i6bEzadtkLpCtlHeHC2dDp8O84b5kXNCr2eF7wKIuQ2hhm+1xciZ6KvqeM+oZoB5U6YX3ueRNtSX/9a6MsURUXdS3jPkORxtl/Xgn7bfMmj3IleMZjTQ4ZQuXoGSbbmHCs7sPU//1umiDD1MxneDIhUtbutiY/vZTfmS4YVs47fOfRFuCVSWkafVmm5U/ld3Tb95otpDqKUuFG8jlEHd9y3SZvoA5/s7/FYelK89ECkDugQb5JAsPeAxJHEjRH1aaZSdKckFG4NJXr8ccRq0JQ3ScdfNDRzEbW39UKxbc8bQDMxpoQKBgQD05EGtfNqlMjgAD9+eKCiV0IYkionmpCG+xRUKNIWStblPiQCQr98ZuKm2Y8TOCI7TA1yXjtoPkpGEviF88ORL3jQc7d0zWxmxlpeM+dbOkBrkChMPa4TZvj9RLr3lIQLSxI/ZhauQ7eOpV3ba4G80TCBd4a4VqhoR5HESV/C6OQKBgQDVMVCiGrBkAGJYzWy0SMhu95nzXlva3E46wEGBwTVSI2MZHYrbmrmfxqgz9L3pLzwcr0WtnTQJ3F5pj/vYl0CnftkjRv7QnLQRjv8G1wxkqXXarntJ8oNCw6uN3HsioPhVKOkgak7T0PGsSp5xqrV79rwGoZZTz3dWFevY8UvvJQKBgHXD/sGLNSoUCFIfUA4iicHh0WBpLv+3FnNDG2cY8tMmiMLyw07RBJy97P9E4zOhce2PxEst6zdp6IjJVhlbTq4dYTo4OROlT6nTHXYx/1a+ffAD2D6mGfEMSC6mJ7O0OENbO0IDwgmkHMMmyIVhQJkJstby3GCWuIq6LJYBrEYhAoGAQybkchscAnPIhpY2LldaovFk0a6gGkEYdxMFzzwvcm7pEQkoKuICpBwr8SmfBCs3sQVYWkZRFOYP6wpKVr/VwqyG8sCzFLy3T2yOUfY81hw2nioldXZo+AewKuAO/Spc7l4TiH1T1Q5UgWODouQVhDWEpkYRltabjUccYdong+0CgYAKgtJ+gBI3HnMAdo6eV9M/tB6ccZda/bLfzhzBLZKDzOS9lmYSXTRQko7fbegRONciFTOzz302EV9st3gCdk6ZgW0rGABmwNzz/sGuTMRSWVrkquTrrpFY2qk2jJjBnnRMGSgYG74xpD3k2Ex9/Zyfi/lt6a6Ik15ovx2XEkQI6A=="
+      PUBLIC_KEY: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAy/EXeFGWg1wK4SR7ZOsamWdTegR8bJtxk7A90TwghL44QMdkKq/W/aaswHjtqeNpMRSLb7htBGxO5gIsE46c3Wd8ppIkI/1EqV5n2V1QhY4VXugnnGrdsE4DLHmgq98wniu7OViFFmiOH/I2AzYfViXASjUpcrD7AsY1QpYrGylUUTJVIWFCXXgP1giXVxFBZKwxsWmk6ZlaSP78m9F03dO18VhW1dkmCzX41UoXxpSf6Ypl/gaBmts5RLEa/PqiVLszb+KT/1q9K69dIR1qmImbB6s4W1E3gdJI3uq42xiAbzfe2hH9fQjM1fvZwKJBlZ27ak34M9nbek2uq1khPQIDAQAB"
+    ports:
+      - "8001:8001"
+    networks:
+      - app_network
+
+  frontend:
+    build:
+      context: ./frontend   
+      dockerfile: Dockerfile
+    container_name: frontend_app
+    restart: unless-stopped
+    depends_on:
+      - auth
+    ports:
+      - "3000:80" 
+    networks:
+      - app_network
+
+volumes:
+  postgres_data:
+
+networks:
+  app_network:
+    driver: bridge

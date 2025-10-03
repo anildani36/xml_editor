@@ -1,6 +1,4 @@
-"use client";
-
-import { cn } from "@/lib/utils"; // shadcn's cn utility
+import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,15 +8,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Link from "next/link";
+import { handleLogout } from "@/routes/auth";
 
-export const Navbar = () => {
-  return (
-    <nav className="flex h-16 w-full items-center justify-between border-b bg-white px-6 shadow-sm">
-      {/* Left side branding */}
-      <div className="text-xl font-semibold tracking-tight">🚀 MyApp</div>
+export const DropdownWrapper = () => {
 
-      {/* Right side avatar + dropdown */}
-      <DropdownMenu>
+    return (
+        <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button
             className={cn(
@@ -33,15 +29,18 @@ export const Navbar = () => {
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="end" className="w-48">
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Profile</DropdownMenuItem>
-          <DropdownMenuItem>Settings</DropdownMenuItem>
-          <DropdownMenuItem>Billing</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem className="text-red-600">Log out</DropdownMenuItem>
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+                <Link href="/user/profile">
+                    Profile
+                </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="text-red-600" onClick={handleLogout}>
+                Log Out
+            </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-    </nav>
-  );
+    );
 }

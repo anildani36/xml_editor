@@ -1,13 +1,14 @@
-const AuthLayout = ({
+
+const EditorLayout = ({
   children
 }: {
 children: React.ReactNode
 }) => {
   return (
-    <main className="flex h-screen flex-col items-center justify-center">
+    <main className="w-full flex h-screen flex-col items-start justify-start">
       {children}
     </main>
   );
 }
 
-export default AuthLayout;
+export default EditorLayout;

@@ -1,2 +1,31 @@
-.venv
 .env*
+*.pem
+
+.git/
+.gitignore
+__pycache__/
+*.pyc
+venv/
+/venv
+.venv/
+env/
+*.log
+*.tmp
+.idea/
+.vscode/
+data/ # If large data files are not needed in the image
+
+# Python specific
+__pycache__
+*.pyo
+
+# Build artifacts
+dist
+build
+*.egg-info
+
+# Git metadata
+.git
+
+# Environment files
+.env

@@ -14,12 +14,16 @@ import {
 } from "@/components/ui/form";
 import { CardWrapper } from "../card/card-wrapper";
 import { FormError } from "../error/form-error";
-import { RegisterSchema } from "@/schemas";
+import { RegisterSchema } from "@/schemas/form_schemas";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { FormSuccess } from "../error/form-success";
+import { useState } from "react";
+import { handleSignup } from "@/routes/auth";
 
 export const RegisterForm = () => {
+    const [error, setError] = useState<string | undefined>("");
+    const [success, setSuccess] = useState<string | undefined>("");
     const form = useForm<z.infer<typeof RegisterSchema>>({
         resolver: zodResolver(RegisterSchema),
         defaultValues: {
@@ -30,9 +34,17 @@ export const RegisterForm = () => {
         },
     })
 
-    const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
-        console.log("Values", values);
+    const onSubmit = async (values: z.infer<typeof RegisterSchema>) => {
+        setSuccess("");
+        setError("");
+        try{
+            const response = await handleSignup(values);
+            setSuccess(response.data);
+        } catch (err: any) {
+            setError(err.message);
+        }
     }
+
     return (
         <CardWrapper
             headerTitle="📝 Register"
@@ -115,14 +127,14 @@ export const RegisterForm = () => {
                         )}/>
                     </div>
 
-                    <FormError message="Registration failed!" />
-                    <FormSuccess message="Registration sucess" />
+                    <FormError message={error} />
+                    <FormSuccess message={success} />
 
                     <Button
                         type="submit"
-                        className="w-full"
+                        className="w-full cursor-pointer"
                     >
-                        Login
+                        Signup
                     </Button>
                 </form>
             </Form>
